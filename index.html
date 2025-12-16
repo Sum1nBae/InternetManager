@@ -6,9 +6,41 @@
   <title>Cibercafé Manager - Nuevo Diseño</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- CONTENEDOR DE MENSAJES -->
+  <div id="mensajes" class="fixed top-4 right-4 z-50"></div>
+
+  <!-- MODAL PARA FINALIZAR SESIÓN -->
+  <div id="modal-fondo" class="fixed inset-0 bg-black bg-opacity-50 hidden"></div>
+
+  <div id="modal-finalizar" class="fixed inset-0 flex items-center justify-center hidden">
+    <div id="modal-contenido" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+
+      <h2 class="text-xl font-bold mb-4">Finalizar Sesión</h2>
+
+      <label class="block font-semibold mt-2">Tiempo (minutos)</label>
+      <input id="fin-tiempo" type="number" min="0" class="w-full p-2 border rounded">
+
+      <label class="block font-semibold mt-2">Copias B/N</label>
+      <input id="fin-copias-bn" type="number" min="0" class="w-full p-2 border rounded">
+
+      <label class="block font-semibold mt-2">Copias Color</label>
+      <input id="fin-copias-color" type="number" min="0" class="w-full p-2 border rounded">
+
+      <p class="mt-4 font-bold text-lg">Total: $<span id="fin-total">0</span></p>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <button id="btn-cancelar-finalizar" class="px-4 py-2 bg-gray-400 text-white rounded">Cancelar</button>
+        <button id="btn-confirmar-finalizar" class="px-4 py-2 bg-green-600 text-white rounded">Confirmar</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- NAVBAR -->
-  <header class="bg-white shadow-md sticky top-0 z-50">
+  <header class="bg-white shadow-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <h1 class="text-2xl font-bold text-indigo-600">Cibercafé Manager</h1>
       <nav>
@@ -23,6 +55,7 @@
   </header>
 
   <main class="flex-1 max-w-7xl mx-auto px-4 py-6">
+
     <!-- DASHBOARD -->
     <section id="dashboard" class="tab-section">
       <h2 class="text-3xl font-semibold mb-6 text-gray-800">Resumen del Día</h2>
@@ -41,7 +74,7 @@
           <p id="available-machines" class="text-3xl font-bold text-indigo-600">0/10</p>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md text-center">
-          <h3 class="text-lg font-semibold text-gray-600">Impresiones Hoy</h3>
+          <h3 class="text-lg font-semibold text-gray-600">Impresiones del Día</h3>
           <p id="today-prints" class="text-3xl font-bold text-indigo-600">0</p>
         </div>
       </div>
@@ -52,28 +85,13 @@
           <table class="w-full text-left border-collapse">
             <thead class="bg-indigo-600 text-white">
               <tr>
-                <th class="p-3">Cliente</th>
                 <th class="p-3">Máquina</th>
                 <th class="p-3">Inicio</th>
                 <th class="p-3">Tiempo</th>
                 <th class="p-3">Costo</th>
-                <th class="p-3">Acciones</th>
               </tr>
             </thead>
-            <tbody id="active-sessions-table">
-              <!-- Ejemplo fila CRUD -->
-              <tr>
-                <td class="p-3">Cliente Anónimo</td>
-                <td class="p-3">PC-01</td>
-                <td class="p-3">10:32 AM</td>
-                <td class="p-3">00:25</td>
-                <td class="p-3">$5.00</td>
-                <td class="p-3 flex gap-2">
-                  <button class="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700">Editar</button>
-                  <button class="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700">Eliminar</button>
-                </td>
-              </tr>
-            </tbody>
+            <tbody id="active-sessions-table"></tbody>
           </table>
         </div>
       </div>
@@ -84,14 +102,11 @@
       <h2 class="text-3xl font-semibold mb-6 text-gray-800">Gestión de Sesiones</h2>
 
       <div class="grid md:grid-cols-2 gap-6">
-        <!-- Iniciar sesión -->
+
+        <!-- INICIAR SESIÓN -->
         <div class="bg-white p-6 rounded-xl shadow-md">
           <h3 class="text-xl font-semibold mb-4">Registrar Nueva Sesión</h3>
           <form id="session-form" class="space-y-4">
-            <div>
-              <label class="font-medium">Nombre del Cliente</label>
-              <input id="client-name" type="text" placeholder="Opcional" class="w-full p-2 border rounded-md" />
-            </div>
 
             <div>
               <label class="font-medium">Máquina</label>
@@ -102,7 +117,7 @@
           </form>
         </div>
 
-        <!-- Finalizar sesión -->
+        <!-- FINALIZAR SESIÓN -->
         <div class="bg-white p-6 rounded-xl shadow-md">
           <h3 class="text-xl font-semibold mb-4">Finalizar Sesión</h3>
           <form id="end-session-form" class="space-y-4">
@@ -114,11 +129,11 @@
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="font-medium">B/N</label>
-                <input id="bw-prints" type="number" value="0" min="0" class="w-full p-2 border rounded-md" />
+                <input id="copias-bn" type="number" value="0" min="0" class="w-full p-2 border rounded-md" />
               </div>
               <div>
                 <label class="font-medium">Color</label>
-                <input id="color-prints" type="number" value="0" min="0" class="w-full p-2 border rounded-md" />
+                <input id="copias-color" type="number" value="0" min="0" class="w-full p-2 border rounded-md" />
               </div>
             </div>
 
@@ -127,37 +142,23 @@
         </div>
       </div>
 
-      <!-- Historial -->
+      <!-- HISTORIAL -->
       <div class="bg-white p-6 rounded-xl shadow-md mt-8">
         <h3 class="text-xl font-semibold mb-4">Historial de Sesiones</h3>
         <div class="overflow-x-auto">
           <table class="w-full border-collapse text-left">
             <thead class="bg-indigo-600 text-white">
               <tr>
-                <th class="p-3">Cliente</th>
                 <th class="p-3">Máquina</th>
                 <th class="p-3">Inicio</th>
                 <th class="p-3">Fin</th>
                 <th class="p-3">B/N</th>
                 <th class="p-3">Color</th>
                 <th class="p-3">Costo</th>
+                <th class="p-3 text-left">Acciones</th>
               </tr>
             </thead>
-            <tbody id="sessions-history">
-              <tr>
-                <td class="p-3">Cliente Anónimo</td>
-                <td class="p-3">PC-02</td>
-                <td class="p-3">09:10 AM</td>
-                <td class="p-3">09:45 AM</td>
-                <td class="p-3">2</td>
-                <td class="p-3">0</td>
-                <td class="p-3">$12.00</td>
-                <td class="p-3 flex gap-2">
-                  <button class="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700">Editar</button>
-                  <button class="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700">Eliminar</button>
-                </td>
-              </tr>
-            </tbody>
+            <tbody id="sessions-history"></tbody>
           </table>
         </div>
       </div>
@@ -166,12 +167,15 @@
     <!-- MÁQUINAS -->
     <section id="machines" class="tab-section hidden">
       <h2 class="text-3xl font-semibold mb-6 text-gray-800">Estado de las Máquinas</h2>
-      <div id="machines-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+      <!-- ESTE ES EL ELEMENTO QUE ui.js NECESITA -->
+      <div id="contenedor-maquinas" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
     <!-- REPORTES -->
     <section id="reports" class="tab-section hidden">
       <h2 class="text-3xl font-semibold mb-6 text-gray-800">Generar Reportes</h2>
+
       <div class="bg-white p-6 rounded-xl shadow-md max-w-md">
         <form id="report-form" class="space-y-4">
           <div>
@@ -192,6 +196,7 @@
         </form>
       </div>
     </section>
+
   </main>
 
   <footer class="bg-gray-800 text-white text-center py-4 mt-10">
@@ -210,5 +215,9 @@
       });
     });
   </script>
+
+  <!-- Módulo JS principal -->
+  <script type="module" src="./js/index.js"></script>
+
 </body>
 </html>
